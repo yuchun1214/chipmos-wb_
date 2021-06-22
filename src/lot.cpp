@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 #include "include/entity.h"
+#include "include/infra.h"
 #include "include/job.h"
 #include "include/job_base.h"
 
@@ -278,39 +279,43 @@ job_t lot_t::job(){
     job_base_init(&j.base); 
     _list_init(&j.list);
     j.list.get_value = jobGetValue;
+    j.part_no = to_info(_part_no);
+    j.pin_package = to_info(_pin_package);
+    j.base.job_info = to_info(_lot_number);
+    j.customer = to_info(_customer);
 
-    memset(j.part_no.data.number, 0, sizeof(unsigned int)*8);
-    j.part_no.text_size = j.part_no.number_size = 0;
-    memset(j.pin_package.data.number, 0, sizeof(unsigned int)*8);
-    j.pin_package.text_size = j.pin_package.number_size = 0;
-    memset(j.base.job_info.data.number, 0, sizeof(unsigned int) * 8);
-    j.base.job_info.text_size = j.base.job_info.number_size = 0;
-    memset(j.customer.data.number, 0, sizeof(unsigned int)*8);
-    j.customer.text_size = j.customer.number_size = 0;
+    // memset(j.part_no.data.number, 0, sizeof(unsigned int)*8);
+    // j.part_no.text_size = j.part_no.number_size = 0;
+    // memset(j.pin_package.data.number, 0, sizeof(unsigned int)*8);
+    // j.pin_package.text_size = j.pin_package.number_size = 0;
+    // memset(j.base.job_info.data.number, 0, sizeof(unsigned int) * 8);
+    // j.base.job_info.text_size = j.base.job_info.number_size = 0;
+    // memset(j.customer.data.number, 0, sizeof(unsigned int)*8);
+    // j.customer.text_size = j.customer.number_size = 0;
 
-    size_t lprt_no = _part_no.length();
-    size_t lppkg = _pin_package.length();
-    size_t llot_no = _lot_number.length();
-    size_t lcust = _customer.length();
+    // size_t lprt_no = _part_no.length();
+    // size_t lppkg = _pin_package.length();
+    // size_t llot_no = _lot_number.length();
+    // size_t lcust = _customer.length();
 
-    lprt_no = (lprt_no > 32 ? 32 : lprt_no);
-    lppkg = (lppkg > 32 ? 32 : lppkg);
-    llot_no = (llot_no > 32 ? 32 : llot_no);
-    lcust = (lcust > 32 ? 32 : lcust);
+    // lprt_no = (lprt_no > 32 ? 32 : lprt_no);
+    // lppkg = (lppkg > 32 ? 32 : lppkg);
+    // llot_no = (llot_no > 32 ? 32 : llot_no);
+    // lcust = (lcust > 32 ? 32 : lcust);
 
-    strncpy(j.part_no.data.text, _part_no.c_str(), lprt_no);
-    strncpy(j.pin_package.data.text, _pin_package.c_str(), lppkg);
-    strncpy(j.base.job_info.data.text, _lot_number.c_str(), llot_no);
-    strncpy(j.customer.data.text, _customer.c_str(), lcust);
-        
-    j.part_no.text_size = lprt_no;
-    j.part_no.number_size = 32 - __builtin_clz(lprt_no >> 2) + 1;
-    j.pin_package.text_size = lppkg;
-    j.pin_package.number_size = 32 - __builtin_clz(lppkg >> 2) + 1;
-    j.base.job_info.text_size = llot_no;
-    j.base.job_info.number_size = 32 - __builtin_clz(llot_no >> 2) + 1;
-    j.customer.text_size = lcust;
-    j.customer.number_size = 32 - __builtin_clz(lcust >> 2) + 1;
+    // strncpy(j.part_no.data.text, _part_no.c_str(), lprt_no);
+    // strncpy(j.pin_package.data.text, _pin_package.c_str(), lppkg);
+    // strncpy(j.base.job_info.data.text, _lot_number.c_str(), llot_no);
+    // strncpy(j.customer.data.text, _customer.c_str(), lcust);
+    //     
+    // j.part_no.text_size = lprt_no;
+    // j.part_no.number_size = 32 - __builtin_clz(lprt_no >> 2) + 1;
+    // j.pin_package.text_size = lppkg;
+    // j.pin_package.number_size = 32 - __builtin_clz(lppkg >> 2) + 1;
+    // j.base.job_info.text_size = llot_no;
+    // j.base.job_info.number_size = 32 - __builtin_clz(llot_no >> 2) + 1;
+    // j.customer.text_size = lcust;
+    // j.customer.number_size = 32 - __builtin_clz(lcust >> 2) + 1;
 
        
     if(_urgent.length()){

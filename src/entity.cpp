@@ -200,6 +200,8 @@ ancillary_resources_t::ancillary_resources_t(std::map<std::string, int> data){
             t = new tool_t;
             t->time = 0;
             t->machine_no = 0;
+            t->name = to_info(it->first);
+            // strcpy(t->name.data.text, it->first.c_str());
             _tools[it->first].push_back(t);
         }
     }

@@ -48,6 +48,7 @@ struct __info_t{
     unsigned int number_size : 3;
 };
 
+struct __info_t to_info(std::string s);
 
 bool isSameInfo(struct __info_t info1, struct __info_t info2);
 

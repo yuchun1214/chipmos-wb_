@@ -1,5 +1,6 @@
 #include <include/infra.h>
 #include <cstdlib>
+#include <cstring>
 
 
 std::vector<std::string> split(char *text, char delimiter)
@@ -101,4 +102,15 @@ int random_range(int start, int end, int different_num)
 
 double randomDouble(){
     return (double) rand() / (double) RAND_MAX;
+}
+
+struct __info_t to_info(std::string s){
+    struct __info_t info;
+    unsigned text_size = s.length() > 32 ? 32 : s.length();
+    memset(info.data.number, 0, sizeof(unsigned int) * 8);
+    info.text_size = text_size;
+    info.number_size = 32 - __builtin_clz(text_size >> 2) + 1;
+
+    strncpy(info.data.text, s.c_str(), info.text_size);
+    return info;
 }

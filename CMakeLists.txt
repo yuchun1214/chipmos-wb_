@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 file(GLOB_RECURSE cppsrc ./src/*.cpp)
 file(GLOB_RECURSE cusrc ./src/*.cu)
-add_executable(main main.cpp ${cppsrc} ${cusrc})
+add_executable(main main.cu ${cppsrc} ${cusrc})
 add_subdirectory(lib)
 set_property(TARGET main PROPERTY CUDA_SEPARABLE_COMPILATION ON)
 target_link_libraries(main lib)
