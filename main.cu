@@ -170,6 +170,7 @@ task_t createTaskFromLotGroups(vector<lot_group_t> groups, ancillary_resources_t
             }
             process_times[k] = process_times_entry;
             size_of_process_times[k] = mpts.size();
+            jobs[k].base.size_of_process_time = mpts.size();
             ++k;
         }
     }

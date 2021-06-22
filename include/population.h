@@ -60,4 +60,6 @@ struct population_t{
 
 void initializePopulation(population_t * pop);
 
+void geneticAlgorithm(population_t *pop);
+
 #endif
