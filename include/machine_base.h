@@ -156,7 +156,7 @@ struct machine_base_operations_t {
     double (*setup_times[])(job_base_t *job1, job_base_t *job2);
 };
 
-typedef double(*setup_time_t)(job_base_t *, job_base_t *);
+typedef double(*setup_time_func_t)(job_base_t *, job_base_t *);
 
 /**
  * machine_base_reset () - Reset machine_base_t object

@@ -22,6 +22,17 @@ typedef struct task_t{
     int * size_of_process_times;
 }task_t;
 
+typedef struct evolution_factors_t{
+    unsigned int *c_selected1;
+    unsigned int *c_selected2;
+    unsigned int *cut_points;
+    unsigned int *range;
+
+    unsigned int *m_selected;
+    unsigned int *gene_idx;
+    double *new_genes;
+}evolution_factors;
+
 
 struct population_t{
     unsigned int no;
@@ -55,10 +66,24 @@ struct population_t{
         wire_t ** address_of_wires;
         process_time_t ** address_of_process_times_entry;
     }host_objects;
+
+    struct {
+        chromosome_base_t * chromosomes;
+        double ** genes;
+        double ** address_of_cugenes;
+    }chromosomes;
+
+    struct{
+        evolution_factors_t device;
+        evolution_factors_t host;
+    }evolution_factors;
+
 };
 
 
 void initializePopulation(population_t * pop);
+
+void cpyResult(population_t * pop, char *fileanme);
 
 void geneticAlgorithm(population_t *pop);
 

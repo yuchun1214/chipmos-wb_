@@ -283,6 +283,7 @@ job_t lot_t::job(){
     j.pin_package = to_info(_pin_package);
     j.base.job_info = to_info(_lot_number);
     j.customer = to_info(_customer);
+    j.part_id = to_info(_part_id);
 
     // memset(j.part_no.data.number, 0, sizeof(unsigned int)*8);
     // j.part_no.text_size = j.part_no.number_size = 0;

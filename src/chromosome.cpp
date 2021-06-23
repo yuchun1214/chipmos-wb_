@@ -57,7 +57,7 @@ double decoding(chromosome_base_t chromosome, job_t * jobs, std::map<unsigned in
     // scheduling
     double makespan = 0;
     for(map<unsigned int, machine_t *>::iterator it = machines.begin(); it != machines.end(); it++){
-        scheduling(it->second, machine_ops); 
+        scheduling(it->second, job_ops, machine_ops); 
         if(it->second->makespan > makespan)
             makespan = it->second->makespan;
     }

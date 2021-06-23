@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <include/def.h>  
+
 #define iter(vec, id) for (unsigned int id = 0; id < vec.size(); ++id)
 
 
@@ -50,7 +52,7 @@ struct __info_t{
 
 struct __info_t to_info(std::string s);
 
-bool isSameInfo(struct __info_t info1, struct __info_t info2);
+__qualifier__ bool isSameInfo(struct __info_t info1, struct __info_t info2);
 
 
 void random(double *genes, int size);

@@ -115,14 +115,16 @@ int main(int argc, const char *argv[])
         .parameters = {
             .AMOUNT_OF_CHROMOSOMES = 100,
             .AMOUNT_OF_R_CHROMOSOMES = 200,
-            .EVOLUTION_RATE = 0.2,
+            .EVOLUTION_RATE = 0.8,
             .SELECTION_RATE = 0.3,
-            .GENERATIONS = 10,
+            .GENERATIONS = 100,
         },
         .task = t
     };
     
     initializePopulation(&pop);
+    geneticAlgorithm(&pop);
+    cpyResult(&pop, "result1.txt");
     return 0;
 }
 

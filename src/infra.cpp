@@ -114,3 +114,4 @@ struct __info_t to_info(std::string s){
     strncpy(info.data.text, s.c_str(), info.text_size);
     return info;
 }
+
