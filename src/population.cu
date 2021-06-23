@@ -560,7 +560,7 @@ void geneticAlgorithm(population_t *pop){
         {
             cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing");
             for(int j = 0; j < 1; ++j){
-                printf("[%d] : %.2f\n", i, chrs[j].fitnessValue);
+                printf("%d,%.2f\n", i, chrs[j].fitnessValue);
             }
         }
 
@@ -596,5 +596,5 @@ void geneticAlgorithm(population_t *pop){
     
     cudaCheck(cudaFreeHost(chrs), "cudaFree chrs");
 
-    testMachineInformation(pop, 0);
+    // testMachineInformation(pop, 0);
 }
