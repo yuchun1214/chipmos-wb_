@@ -117,7 +117,7 @@ int main(int argc, const char *argv[])
             .AMOUNT_OF_R_CHROMOSOMES = 200,
             .EVOLUTION_RATE = 0.8,
             .SELECTION_RATE = 0.3,
-            .GENERATIONS = 100,
+            .GENERATIONS = 60,
         },
         .task = t
     };

@@ -1,6 +1,7 @@
 #include <include/population.h>
 #include <cuda.h>
 #include <cuda_runtime_api.h>
+#include <ctime>
 #include "include/chromosome_base.h"
 #include "include/entity.h"
 #include "include/infra.h"
@@ -178,13 +179,13 @@ __global__ void scheduling(machine_t **machines, job_base_operations_t *job_ops,
 __global__ void computeFitnessValue(machine_t ** machines, chromosome_base_t *chromosomes, int AMOUNT_OF_MACHINES, int AMOUNT_OF_R_CHROMOSOMES){
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     if( x < AMOUNT_OF_R_CHROMOSOMES){
-        double worst = -1;
+        double total_completion_time = 0;
         for(int i = 0; i < AMOUNT_OF_MACHINES; ++i){
-            if(machines[x][i].total_completion_time > worst){
-                worst = machines[x][i].total_completion_time;
-            }
+            // if(machines[x][i].total_completion_time > worst){
+            total_completion_time += machines[x][i].total_completion_time;
+            // }
         }
-        chromosomes[x].fitnessValue = worst;
+        chromosomes[x].fitnessValue = total_completion_time;
     }
 }
 
@@ -507,7 +508,9 @@ void geneticAlgorithm(population_t *pop){
 
     dim3 job_chromosome_thread(10, 100);
     dim3 job_chromosome_block(AMOUNT_OF_R_CHROMOSOMES / job_chromosome_thread.x, AMOUNT_OF_JOBS / job_chromosome_thread.y + 1);
-    for(int i = 0 ; i < pop->parameters.GENERATIONS; ++i){
+    clock_t q1 = clock();
+    clock_t q2 = q1 + pop->parameters.GENERATIONS * CLOCKS_PER_SEC;
+    for(int i = 0 ; q1 < q2; ++i, q1 = clock()){
 
         binding<<<job_chromosome_block, job_chromosome_thread>>>(
                 pop->device_objects.jobs, 
