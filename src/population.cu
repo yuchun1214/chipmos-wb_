@@ -557,12 +557,12 @@ void geneticAlgorithm(population_t *pop){
         
         sortChromosomes<<<1, 1>>>(pop->chromosomes.chromosomes, AMOUNT_OF_R_CHROMOSOMES);
 
-        {
-            cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing");
-            for(int j = 0; j < 1; ++j){
-                printf("%d,%.2f\n", i, chrs[j].fitnessValue);
-            }
-        }
+        // {
+        //     cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing");
+        //     for(int j = 0; j < 1; ++j){
+        //         printf("%d,%.2f\n", i, chrs[j].fitnessValue);
+        //     }
+        // }
 
    	    CROSSOVER_AMOUNT = pop->parameters.AMOUNT_OF_CHROMOSOMES *
                                pop->parameters.EVOLUTION_RATE;
@@ -595,6 +595,9 @@ void geneticAlgorithm(population_t *pop){
     }
     
     cudaCheck(cudaFreeHost(chrs), "cudaFree chrs");
-
+    cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing");
+    FILE * file = fopen("result.txt", "a+");
+    fprintf(file, "%f\n", chrs[0].fitnessValue);
+    fclose(file);
     // testMachineInformation(pop, 0);
 }

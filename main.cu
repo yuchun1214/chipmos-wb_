@@ -43,7 +43,6 @@ task_t createTaskFromLotGroups(vector<lot_group_t> groups, ancillary_resources_t
 
 int main(int argc, const char *argv[])
 {
-    srand(time(NULL));
     csv_t lot_csv("lots.csv", "r", true, true);
     lot_csv.setHeaders(map<string, string>({
                     {"route", "route"},
@@ -108,8 +107,10 @@ int main(int argc, const char *argv[])
 
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
 
+    srand(time(NULL));
     task_t t = createTaskFromLotGroups(round_groups[0], tools, wires, machines);
-    
+    printf("amount of lots = %d\n", t.AMOUNT_OF_JOBS);
+    printf("amount of machines = %d\n", t.AMOUNT_OF_MACHINES);
     population_t pop{
         .no = 0,
         .parameters = {
@@ -117,14 +118,14 @@ int main(int argc, const char *argv[])
             .AMOUNT_OF_R_CHROMOSOMES = 200,
             .EVOLUTION_RATE = 0.8,
             .SELECTION_RATE = 0.3,
-            .GENERATIONS = 60,
+            .GENERATIONS = 120,
         },
         .task = t
     };
     
     initializePopulation(&pop);
     geneticAlgorithm(&pop);
-    cpyResult(&pop, "result1.txt");
+    // cpyResult(&pop, "result1.txt");
     return 0;
 }
 
