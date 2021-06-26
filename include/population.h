@@ -42,6 +42,7 @@ struct population_t{
         double EVOLUTION_RATE;
         double SELECTION_RATE;
         int GENERATIONS;
+        int SWAP_CHROMOSOMES;
     }parameters;
 
     task_t task;
@@ -71,7 +72,11 @@ struct population_t{
         chromosome_base_t * chromosomes;
         double ** genes;
         double ** address_of_cugenes;
+        
+        chromosome_base_t * host_chromosomes;
     }chromosomes;
+
+
 
     struct{
         evolution_factors_t device;
@@ -85,6 +90,9 @@ void initializePopulation(population_t * pop);
 
 void cpyResult(population_t * pop, char *fileanme);
 
-void geneticAlgorithm(population_t *pop);
+void *geneticAlgorithm(void *pop);
+
+
+void swapPopulation(population_t pops[], const int AMOUNT_OF_POPULATIONS);
 
 #endif
