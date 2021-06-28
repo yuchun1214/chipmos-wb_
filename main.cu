@@ -13,18 +13,19 @@
 #include "include/linked_list.h"
 #include "include/machine_base.h"
 
-#include <include/arrival.h>
-#include <include/condition_card.h>
-#include <include/csv.h>
-#include <include/da.h>
-#include <include/entity.h>
-#include <include/infra.h>
-#include <include/lot.h>
-#include <include/route.h>
-#include <include/population.h>
-#include <include/chromosome.h>
+#include "include/arrival.h"
+#include "include/condition_card.h"
+#include "include/csv.h"
+#include "include/da.h"
+#include "include/entity.h"
+#include "include/infra.h"
+#include "include/lot.h"
+#include "include/route.h"
+#include "include/population.h"
+#include "include/chromosome.h"
 
 #include <cuda.h>
+#include <pthread.h>
 
 
 using namespace std;
@@ -108,61 +109,79 @@ int main(int argc, const char *argv[])
 
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
 
-    srand(time(NULL));
+    // srand(time(NULL));
     task_t t = createTaskFromLotGroups(round_groups[0], tools, wires, machines);
     printf("amount of lots = %d\n", t.AMOUNT_OF_JOBS);
     printf("amount of machines = %d\n", t.AMOUNT_OF_MACHINES);
-    
-    population_t populations[10];
-    pthread_t threads[10];
 
-    for(int i = 0; i < 10; ++i){
-        populations[i] = population_t{
-            .no = (unsigned)i,
-            .parameters = {
-                .AMOUNT_OF_CHROMOSOMES = 50,
-                .AMOUNT_OF_R_CHROMOSOMES = 100,
-                .EVOLUTION_RATE = 0.8,
-                .SELECTION_RATE = 0.2,
-                .GENERATIONS = 20,
-                .SWAP_CHROMOSOMES = 10
-            },
-            .task = t,
-        };
-    }
+    population_t pop = {
+        .no = 0,
+        .parameters = {
+            .AMOUNT_OF_CHROMOSOMES = 50,
+            .AMOUNT_OF_R_CHROMOSOMES = 100,
+            .EVOLUTION_RATE = 0.8,
+            .SELECTION_RATE = 0.2,
+            .GENERATIONS = 60,
+            .SWAP_CHROMOSOMES = 60
+        },
+        .task = t
+    };
+    initializePopulation(&pop);
+    geneticAlgorithm(&pop);
+    // pthread_t thread;
+    // pthread_create(&thread, NULL, geneticAlgorithm, &pop);
+    // pthread_join(thread, NULL);
     
-    for(int i = 0; i < 10; ++i){
-        initializePopulation(&populations[i]);
-    }
-    
-    clock_t t1;
-    clock_t t2;
-    
-    for(int i = 0; i < 3; ++i){
-        t1 = clock();
-        t2 = t1 + 60 * CLOCKS_PER_SEC;
-        for(int i = 0; i < 10; ++i){
-            pthread_create(&threads[i], NULL,  geneticAlgorithm, (void*)&populations[i]);
-        }
+    // population_t populations[10];
+    // pthread_t threads[10];
 
-        for(int i = 0; i < 10; ++i){
-            pthread_join(threads[i], NULL);
-        }
-        swapPopulation(populations, 10);
-    }
-    
-    double bestFitnessValue = 1000000000;
-    for(int i = 0; i < 10; ++i){
-        for(int j = 0; j <  populations[i].parameters.SWAP_CHROMOSOMES; ++j){
-            if(populations[i].chromosomes.host_chromosomes[j].fitnessValue < bestFitnessValue){
-                bestFitnessValue = populations[i].chromosomes.host_chromosomes[j].fitnessValue;
-            }
-        }
-    }
+    // for(int i = 0; i < 10; ++i){
+    //     populations[i] = population_t{
+    //         .no = (unsigned)i,
+    //         .parameters = {
+    //             .AMOUNT_OF_CHROMOSOMES = 50,
+    //             .AMOUNT_OF_R_CHROMOSOMES = 100,
+    //             .EVOLUTION_RATE = 0.8,
+    //             .SELECTION_RATE = 0.2,
+    //             .GENERATIONS = 20,
+    //             .SWAP_CHROMOSOMES = 10
+    //         },
+    //         .task = t,
+    //     };
+    // }
+    // 
+    // for(int i = 0; i < 10; ++i){
+    //     initializePopulation(&populations[i]);
+    // }
+    // 
+    // clock_t t1;
+    // clock_t t2;
+    // 
+    // for(int i = 0; i < 3; ++i){
+    //     t1 = clock();
+    //     t2 = t1 + 60 * CLOCKS_PER_SEC;
+    //     for(int i = 0; i < 10; ++i){
+    //         pthread_create(&threads[i], NULL,  geneticAlgorithm, (void*)&populations[i]);
+    //     }
 
-    FILE * file = fopen("result.txt", "a+");
-    fprintf(file, "%f\n", bestFitnessValue);
-    fclose(file);
+    //     for(int i = 0; i < 10; ++i){
+    //         pthread_join(threads[i], NULL);
+    //     }
+    //     swapPopulation(populations, 10);
+    // }
+    // 
+    // double bestFitnessValue = 1000000000;
+    // for(int i = 0; i < 10; ++i){
+    //     for(int j = 0; j <  populations[i].parameters.SWAP_CHROMOSOMES; ++j){
+    //         if(populations[i].chromosomes.host_chromosomes[j].fitnessValue < bestFitnessValue){
+    //             bestFitnessValue = populations[i].chromosomes.host_chromosomes[j].fitnessValue;
+    //         }
+    //     }
+    // }
+
+    // FILE * file = fopen("result.txt", "a+");
+    // fprintf(file, "%f\n", bestFitnessValue);
+    // fclose(file);
             
     return 0;
 }
@@ -173,8 +192,8 @@ task_t createTaskFromLotGroups(vector<lot_group_t> groups, ancillary_resources_t
     int AMOUNT_OF_JOBS = 0;
     int AMOUNT_OF_MACHINES = 0;
     int k = 0;
-    vector<lot_group_t> ngroups(groups.begin() + 1, groups.begin() + 8);
-    groups = ngroups;
+    // vector<lot_group_t> ngroups(groups.begin() + 1, groups.begin() + 8);
+    // groups = ngroups;
     iter(groups, i){
         AMOUNT_OF_JOBS += groups[i].lots.size();
         AMOUNT_OF_MACHINES += groups[i].machine_amount;
