@@ -39,13 +39,12 @@ void test_machines_t_distributeAResource::SetUp()
     machines = new machines_t();
     if (machines == nullptr)
         exit(EXIT_FAILURE);
-    cases.push_back(
-        test_case_t{._number_of_resources = 100,
-                    ._case = map<string, int>({
-                        {"g1", 40},
-                        {"g2", 60},
-                    }),
-                    ._ans = map<string, int>({{"g1", 40}, {"g2", 60}})});
+    cases.push_back(test_case_t{100,
+                                {
+                                    {"g1"s, 40},
+                                    {"g2"s, 60},
+                                },
+                                {{"g1"s, 40}, {"g2"s, 60}}});
 
     // cases.push_back((struct test_case_t){
     //     ._number_of_resources = 50,
