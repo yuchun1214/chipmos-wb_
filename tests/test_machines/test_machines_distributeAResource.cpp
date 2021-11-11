@@ -39,12 +39,12 @@ void test_machines_t_distributeAResource::SetUp()
     machines = new machines_t();
     if (machines == nullptr)
         exit(EXIT_FAILURE);
-    // cases.push_back(test_case_t{100,
-    //                             {
-    //                                 {"g1"s, 40},
-    //                                 {"g2"s, 60},
-    //                             },
-    //                             {{"g1"s, 40}, {"g2"s, 60}}});
+    cases.push_back(test_case_t{100,
+                                {
+                                    {"g1"s, 40},
+                                    {"g2"s, 60},
+                                },
+                                {{"g1"s, 40}, {"g2"s, 60}}});
     // cases.push_back((struct test_case_t){
     //     ._number_of_resources = 50,
     //     ._case = map<string, int>({
@@ -127,10 +127,10 @@ TEST_F(test_machines_t_distributeAResource, test_correctness)
     for (unsigned int i = 0; i < cases.size(); ++i) {
         map<string, int> ans = machines->_distributeAResource(
             cases[i]._number_of_resources, cases[i]._case);
-        //    for (map<string, int>::iterator it = cases[i]._ans.begin();
-        //         it != cases[i]._ans.end(); ++it) {
-        //        EXPECT_NO_THROW(ans.at(it->first));
-        //        EXPECT_EQ(ans[it->first], cases[i]._ans[it->first]);
-        //    }
+        for (map<string, int>::iterator it = cases[i]._ans.begin();
+             it != cases[i]._ans.end(); ++it) {
+            EXPECT_NO_THROW(ans.at(it->first));
+            EXPECT_EQ(ans[it->first], cases[i]._ans[it->first]);
+        }
     }
 }
