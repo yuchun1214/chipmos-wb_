@@ -45,7 +45,6 @@ void test_machines_t_distributeAResource::SetUp()
                                     {"g2"s, 60},
                                 },
                                 {{"g1"s, 40}, {"g2"s, 60}}});
-
     // cases.push_back((struct test_case_t){
     //     ._number_of_resources = 50,
     //     ._case = map<string, int>({
