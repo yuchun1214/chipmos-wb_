@@ -14,6 +14,11 @@
 
 using namespace std;
 
+struct test_case_t {
+    map<string, string> input;
+    bool out;
+};
+
 class test_machines_t_canJobRunOnTheMachine : public testing::Test
 {
 public:
@@ -65,6 +70,10 @@ void test_machines_t_canJobRunOnTheMachine::createTestingObjects(
     ms->_job_can_run_locations[cs["lot_number"]] = can_run_location;
     ms->_job_process_times[cs["lot_number"]] = process_times;
 
+    if (cs["is_automotive"].compare("Y") == 0) {
+        ms->setAutomotiveLotNumber(set<string>{cs["lot_number"]});
+    }
+
     *job = j;
     *machine = m;
     *machines = ms;
@@ -79,25 +88,30 @@ void test_machines_t_canJobRunOnTheMachine::TearDown()
 
 void test_machines_t_canJobRunOnTheMachine::SetUp()
 {
-    case1 = map<string, string>({{"lot_number", "L1"},
-                                 {"machine_location", "TA"},
-                                 {"machine_model", "UTC1000"},
-                                 {"can_run_location", "TA,TB"},
-                                 {"can_run_models", "UTC1000,UTC2000,UTC3000"},
-                                 {"process_time", "1,2,3"}});
+    case1 = map<string, string>(
+        {{"lot_number", "L1"},
+         {"cust", "MTI"},
+         {"machine_location", "TA"},
+         {"machine_model", "UTC1000"},
+         {"machine_name", "BB001"} {"can_run_location", "TA,TB"},
+         {"can_run_models", "UTC1000,UTC2000,UTC3000"},
+         {"process_time", "1,2,3"},
+         {"is_automotive", "Y"}});
 
-    case2 = map<string, string>({{"lot_number", "L1"},
-                                 {"machine_location", "TA"},
-                                 {"machine_model", "UTC5000"},
-                                 {"can_run_location", "TA,TB"},
-                                 {"can_run_models", "UTC1000,UTC2000,UTC3000"},
-                                 {"process_time", "1,2,3"}});
-    case3 = map<string, string>({{"lot_number", "L1"},
-                                 {"machine_location", "TC"},
-                                 {"machine_model", "UTC5000"},
-                                 {"can_run_location", "TA,TB"},
-                                 {"can_run_models", "UTC1000,UTC2000,UTC3000"},
-                                 {"process_time", "1,2,3"}});
+    // case2 = map<string, string>({{"lot_number", "L1"},
+    //                              {"machine_location", "TA"},
+    //                              {"machine_model", "UTC5000"},
+    //                              {"can_run_location", "TA,TB"},
+    //                              {"can_run_models",
+    //                              "UTC1000,UTC2000,UTC3000"},
+    //                              {"process_time", "1,2,3"}});
+    // case3 = map<string, string>({{"lot_number", "L1"},
+    //                              {"machine_location", "TC"},
+    //                              {"machine_model", "UTC5000"},
+    //                              {"can_run_location", "TA,TB"},
+    //                              {"can_run_models",
+    //                              "UTC1000,UTC2000,UTC3000"},
+    //                              {"process_time", "1,2,3"}});
 }
 
 TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness1)
@@ -106,14 +120,14 @@ TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness1)
     EXPECT_TRUE(machines->_canJobRunOnTheMachine(job, machine));
 }
 
-TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness2)
-{
-    createTestingObjects(&job, &machine, &machines, case2);
-    EXPECT_FALSE(machines->_canJobRunOnTheMachine(job, machine));
-}
-
-TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness3)
-{
-    createTestingObjects(&job, &machine, &machines, case3);
-    EXPECT_FALSE(machines->_canJobRunOnTheMachine(job, machine));
-}
+// TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness2)
+// {
+//     createTestingObjects(&job, &machine, &machines, case2);
+//     EXPECT_FALSE(machines->_canJobRunOnTheMachine(job, machine));
+// }
+//
+// TEST_F(test_machines_t_canJobRunOnTheMachine, test_correctness3)
+// {
+//     createTestingObjects(&job, &machine, &machines, case3);
+//     EXPECT_FALSE(machines->_canJobRunOnTheMachine(job, machine));
+// }
