@@ -574,12 +574,12 @@ map<string, int> machines_t::_distributeAResource(
         if (_n_res == 0) {
             _n_res = 1;
         }
-        result[data[i].name] = _n_res;
+        // result[data[i].name] = _n_res;
         number_of_resources -= _n_res;
         ++i;
     }
 
-    result[data.back().name] = number_of_resources;
+    // result[data.back().name] = number_of_resources;
 
     return result;
 }
