@@ -59,12 +59,19 @@ void stringToUpper(char *text)
 time_t timeConverter(std::string text)
 {
     // TODO : convert text to time;
-    struct tm _tm;
-    sscanf(text.c_str(), "%d/%d/%d %d:%d", &_tm.tm_year, &_tm.tm_mon, &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min);
+    // struct tm _tm;
+    // sscanf(text.c_str(), "%d/%d/%d %d:%d", &_tm.tm_year, &_tm.tm_mon, &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min);
+    // _tm.tm_sec = 0;
+    // _tm.tm_isdst = false;
+  	struct tm _tm;
+    sscanf(text.c_str(), "%d-%d-%d %d:%d", &_tm.tm_year, &_tm.tm_mon,
+           &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min);
     _tm.tm_sec = 0;
     _tm.tm_isdst = false;
+    _tm.tm_year += 100;
 
-    return mktime(&_tm);
+    return mktime(&_tm);  
+
 }
 
 bool isSameInfo(struct __info_t info1, struct __info_t info2){

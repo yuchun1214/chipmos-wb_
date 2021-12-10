@@ -51,7 +51,11 @@ void freeChromosomes(population_t *pop);
 
 int main(int argc, const char *argv[])
 {
-    csv_t lot_csv("lots.csv", "r", true, true);
+    
+    csv_t arguments(argv[1], "r", true, true);
+    map<string, string> elements = arguments.getElements(0);
+
+    csv_t lot_csv(elements["nlots"], "r", true, true);
     lot_csv.setHeaders(
         map<string, string>({{"route", "route"},
                              {"lot_number", "lot_number"},
@@ -84,30 +88,23 @@ int main(int argc, const char *argv[])
     lots.addLots(allots);
 
 
-    // lots.addLots(createLots("WipOutPlanTime_.csv",
-    // "product_find_process_id.csv",
-    //                "process_find_lot_size_and_entity.csv", "fcst.csv",
-    //                "routelist.csv", "newqueue_time.csv",
-    //                "BOM List_20210521.csv", "Process find heatblock.csv",
-    //                "EMS Heatblock data.csv", "GW Inventory.csv"));
-
 
     ancillary_resources_t tools(lots.amountOfTools());
     ancillary_resources_t wires(lots.amountOfWires());
 
-    csv_t machine_csv("machines.csv", "r", true, true);
+    csv_t machine_csv(elements["nmachines"], "r", true, true);
     machine_csv.trim(" ");
     machine_csv.setHeaders(map<string, string>({{"entity", "ENTITY"},
                                                 {"model", "MODEL"},
                                                 {"recover_time", "OUTPLAN"}}));
 
-    csv_t location_csv("locations.csv", "r", true, true);
+    csv_t location_csv(elements["locations"], "r", true, true);
     location_csv.trim(" ");
     location_csv.setHeaders(
         map<string, string>({{"entity", "Entity"}, {"location", "Location"}}));
 
 
-    char *text = strdup("2021/4/17 8:30");
+    char *text = strdup(elements["std_time"].c_str());
     entities_t entities(text);
     entities.addMachines(machine_csv, location_csv);
     machines_t machines;
@@ -134,6 +131,7 @@ int main(int argc, const char *argv[])
     initializeOperations(&pop);
     iter(pop.groups, i){
         initializePopulation(&pop, machines, tools, wires, i);
+        printf("amount of jobs = %d\n", pop.round.AMOUNT_OF_JOBS);
         geneticAlgorithm(&pop);
         freeJobs(&pop.round);
         freeResources(&pop.round);
@@ -367,7 +365,7 @@ void geneticAlgorithm(population_t *pop)
         // sort the chromosomes
         qsort(chromosomes, pop->parameters.AMOUNT_OF_R_CHROMOSOMES,
               sizeof(chromosome_base_t), chromosomeCmpr);
-        printf("%d,%.3f\n", k, chromosomes[0].fitnessValue);
+        // printf("%d,%.3f\n", k, chromosomes[0].fitnessValue);
 
         // statistic
         double sum = 0;
