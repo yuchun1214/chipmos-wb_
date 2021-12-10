@@ -798,7 +798,7 @@ void *geneticAlgorithm(void *_pop)
     clock_t q1 = clock();
     clock_t q2 = q1 + pop->parameters.GENERATIONS * CLOCKS_PER_SEC;
     for (int i = 0; q1 < q2;  ++i, q1 = clock()) {
-        printf("gneneration %d\n",i);
+        // printf("generation %d\n",i);
         binding<<<job_chromosome_block, job_chromosome_thread>>>(
             pop->device_objects.jobs, pop->chromosomes.chromosomes,
             pop->device_objects.job_ops, AMOUNT_OF_JOBS,
