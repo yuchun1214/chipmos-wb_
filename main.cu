@@ -114,23 +114,25 @@ int main(int argc, const char *argv[])
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
 
     // srand(time(NULL));
-        
+    double tm = 60; 
+    double total_completion_time = 0;
     for(int i = 0; i < round_groups.size(); ++i){
         task_t t = createTaskFromLotGroups(round_groups[i], tools, wires, machines);
-        printf("amount of lots = %d\n", t.AMOUNT_OF_JOBS);
-        printf("amount of machines = %d\n", t.AMOUNT_OF_MACHINES);
+        // printf("amount of lots = %d\n", t.AMOUNT_OF_JOBS);
+        // printf("amount of machines = %d\n", t.AMOUNT_OF_MACHINES);
 
         population_t pop = {.no = 0,
                             .parameters = {.AMOUNT_OF_CHROMOSOMES = 50,
                                            .AMOUNT_OF_R_CHROMOSOMES = 100,
                                            .EVOLUTION_RATE = 0.8,
                                            .SELECTION_RATE = 0.2,
-                                           .GENERATIONS = 5,
+                                           .GENERATIONS = 60 / round_groups.size(),
                                            .SWAP_CHROMOSOMES = 60},
                             .task = t};
         initializePopulation(&pop);
-        geneticAlgorithm(&pop);
+        total_completion_time += geneticAlgorithm(&pop);
     }
+    printf("%f\n", total_completion_time);
 
     // pthread_t thread;
     // pthread_create(&thread, NULL, geneticAlgorithm, &pop);

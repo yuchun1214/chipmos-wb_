@@ -744,7 +744,7 @@ void testMachineInformation(population_t *pop, int n)
 }
 
 
-void *geneticAlgorithm(void *_pop)
+double geneticAlgorithm(void *_pop)
 {
     population_t *pop = (population_t *) _pop;
 
@@ -884,14 +884,11 @@ void *geneticAlgorithm(void *_pop)
     }
 
     cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing"); 
-    FILE* file = fopen("result.txt", "a+"); 
-    fprintf(stdout, "%f\n", chrs[0].fitnessValue); 
-    fclose(file); 
-    // testMachineInformation(pop, 0);
+    double best_fitness_val = chrs[0].fitnessValue;
 
     cudaCheck(cudaFreeHost(chrs), "cudaFree chrs");
     // pthread_exit(NULL);
-    return NULL;
+    return best_fitness_val;
 }
 
 

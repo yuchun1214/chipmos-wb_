@@ -90,7 +90,7 @@ void initializePopulation(population_t * pop);
 
 void cpyResult(population_t * pop, char *fileanme);
 
-void *geneticAlgorithm(void *pop);
+double geneticAlgorithm(void *pop);
 
 
 void swapPopulation(population_t pops[], const int AMOUNT_OF_POPULATIONS);
