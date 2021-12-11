@@ -43,7 +43,7 @@ void initializePopulation(population_t *pop,
 void initializeOperations(population_t *pop);
 
 
-void geneticAlgorithm(population_t *pop);
+double geneticAlgorithm(population_t *pop);
 
 void freeJobs(round_t *round);
 void freeResources(round_t * round);
@@ -110,34 +110,35 @@ int main(int argc, const char *argv[])
     machines_t machines;
     machines.addMachines(entities.getAllEntity());
 
-    vector<entity_t *> test_ents = entities.getAllEntity();  
-    iter(test_ents, i){
-        printf("%s : %f\n", test_ents[i]->entity_name.c_str(), test_ents[i]->recover_time);
-    }
+    // vector<entity_t *> test_ents = entities.getAllEntity();  
+    // iter(test_ents, i){
+    //     printf("%s : %f\n", test_ents[i]->entity_name.c_str(), test_ents[i]->recover_time);
+    // }
 
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
-
+    double tm = 60;
     population_t pop = population_t{
         .parameters = {.AMOUNT_OF_CHROMOSOMES = 100,
                        .AMOUNT_OF_R_CHROMOSOMES = 200,
                        .EVOLUTION_RATE = 0.8,
                        .SELECTION_RATE = 0.2,
-                       .GENERATIONS = 500},
+                       .GENERATIONS = tm / round_groups.size()},
         .groups = round_groups,
         .current_round_no = 0
     };
-
-    // srand(time(NULL));
+    // printf("GENERATIONS = %d\n", pop.parameters.GENERATIONS);
+    srand(time(NULL));
     initializeOperations(&pop);
+    double total_fitness_val = 0;
     iter(pop.groups, i){
         initializePopulation(&pop, machines, tools, wires, i);
-        printf("amount of jobs = %d\n", pop.round.AMOUNT_OF_JOBS);
-        geneticAlgorithm(&pop);
+        // printf("amount of jobs = %d\n", pop.round.AMOUNT_OF_JOBS);
+        total_fitness_val += geneticAlgorithm(&pop);
         freeJobs(&pop.round);
         freeResources(&pop.round);
         freeChromosomes(&pop);
     }
-
+    printf("%f\n", total_fitness_val);
     return 0;
 }
 
@@ -341,7 +342,7 @@ round_t createARound(vector<lot_group_t> group,
     return round_res;
 }
 
-void geneticAlgorithm(population_t *pop)
+double geneticAlgorithm(population_t *pop)
 {
     int AMOUNT_OF_JOBS = pop->round.AMOUNT_OF_JOBS;
     job_t *jobs = pop->round.jobs;
@@ -355,7 +356,8 @@ void geneticAlgorithm(population_t *pop)
 
     // initialize machine_op
     int k;
-    for (k = 0; k < pop->parameters.GENERATIONS; ++k) {
+    clock_t c, end = clock() + pop->parameters.GENERATIONS * CLOCKS_PER_SEC;
+    for (k = 0, c = clock(); c < end; c = clock(), ++k) {
         for (int i = 0; i < pop->parameters.AMOUNT_OF_R_CHROMOSOMES;
              ++i) {  // for all chromosomes
             chromosomes[i].fitnessValue =
@@ -430,23 +432,23 @@ void geneticAlgorithm(population_t *pop)
             mutation(chromosomes[rnd], chromosomes[l]);
         }
     }
-
-    decoding(chromosomes[0], jobs, machines, machine_ops, list_ops, job_ops, AMOUNT_OF_JOBS);
+    return chromosomes[0].fitnessValue;
+    // decoding(chromosomes[0], jobs, machines, machine_ops, list_ops, job_ops, AMOUNT_OF_JOBS);
     // update machines' avaliable time
-    for(map<unsigned int, machine_t *>::iterator it = machines.begin();  it != machines.end(); ++it){
-        it->second->base.avaliable_time = it->second->makespan;
-    }
+    // for(map<unsigned int, machine_t *>::iterator it = machines.begin();  it != machines.end(); ++it){
+    //     it->second->base.avaliable_time = it->second->makespan;
+    // }
    
     // output
-    FILE *file = fopen("result.txt", "a+");
-    for(int i = 0; i < AMOUNT_OF_JOBS; ++i){
-        machine_t *m = machines[jobs[i].base.machine_no];
-        // lot_number, part_no, part_id, entity_name, start time, end_time
-        string ent_name = convertUIntToEntityName(m->base.machine_no);
-        fprintf(file, "%s, %s, %s, %s, %.3f, %.3f\n",
-        jobs[i].base.job_info.data.text, m->tool->name.data.text,
-        m->wire->name.data.text, ent_name.c_str(), jobs[i].base.start_time,
-        jobs[i].base.end_time);
-    }
-    fclose(file);
+    // FILE *file = fopen("result.txt", "a+");
+    // for(int i = 0; i < AMOUNT_OF_JOBS; ++i){
+    //     machine_t *m = machines[jobs[i].base.machine_no];
+    //     // lot_number, part_no, part_id, entity_name, start time, end_time
+    //     string ent_name = convertUIntToEntityName(m->base.machine_no);
+    //     fprintf(file, "%s, %s, %s, %s, %.3f, %.3f\n",
+    //     jobs[i].base.job_info.data.text, m->tool->name.data.text,
+    //     m->wire->name.data.text, ent_name.c_str(), jobs[i].base.start_time,
+    //     jobs[i].base.end_time);
+    // }
+    // fclose(file);
 }
