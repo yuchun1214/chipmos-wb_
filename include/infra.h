@@ -39,11 +39,11 @@ time_t timeConverter(std::string text);
 void stringToLower(char *text);
 void stringToUpper(char *text);
 
-struct __info_t{
-    union{
+struct __info_t {
+    union {
         char text[32];
         unsigned int number[8];
-    }data;
+    } data;
     unsigned int text_size : 5;
     unsigned int number_size : 3;
 };

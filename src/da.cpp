@@ -41,17 +41,20 @@ int da_stations_t::setFcst(csv_t _fcst, bool strict)
                 act += temp.act;
                 remain = fcst;
             }
-            _da_stations_container[bd_id] = da_station_t{.fcst = fcst,
-                                                         .act = act,
-                                                         .remain = remain,
-                                                         .upm = fcst / 1440, // upm -> unit per minute
-                                                         .time = 0,
-                                                         .finished = false};
+            _da_stations_container[bd_id] =
+                da_station_t{.fcst = fcst,
+                             .act = act,
+                             .remain = remain,
+                             .upm = fcst / 1440,  // upm -> unit per minute
+                             .time = 0,
+                             .finished = false};
         }
     }
-    
+
     // std::vector<std::string> wrong_bdid;
-    // for(std::map<std::string, da_station_t>::iterator it = _da_stations_container.begin(); it != _da_stations_container.end(); it ++){
+    // for(std::map<std::string, da_station_t>::iterator it =
+    // _da_stations_container.begin(); it != _da_stations_container.end(); it
+    // ++){
     //     if
     // }
 

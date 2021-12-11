@@ -12,7 +12,7 @@
 unsigned int convertEntityNameToUInt(std::string name);
 std::string convertUIntToEntityName(unsigned int);
 
-typedef struct{
+typedef struct {
     double recover_time;
     double outplan_time;
     std::string entity_name;
@@ -20,8 +20,8 @@ typedef struct{
     std::string model_name;
     std::string location;
     bool hold;
-    tool_t * tool;
-    wire_t * wire;
+    tool_t *tool;
+    wire_t *wire;
 } entity_t;
 
 machine_t to_machine(entity_t ent);
@@ -29,9 +29,8 @@ machine_t to_machine(entity_t ent);
 class entities_t
 {
 private:
-
     std::vector<entity_t *> _ents;
-    
+
     // _entities[MODEL][AREA] is a vector of entity_t object.
     std::map<std::string, std::map<std::string, std::vector<entity_t *> > >
         _entities;
@@ -52,7 +51,7 @@ public:
      * The constructor will convert @b _time to time_t type
      */
     entities_t(std::string _time);
-    
+
     /**
      * addMachine() - add a machine
      *
@@ -76,15 +75,18 @@ public:
     // std::vector<entity_t> randomlyGetEntities(std::string model_name,
     //                                           std::string area,
     //                                           int amount);
-    
+
     /**
      * randomlyGetEntitiesByLocations
      */
-    std::vector<entity_t *> randomlyGetEntitiesByLocations(std::map<std::string, int> statistic, int amount);
+    std::vector<entity_t *> randomlyGetEntitiesByLocations(
+        std::map<std::string, int> statistic,
+        int amount);
 
     void setTime(std::string text);
-    
-    std::map<std::string, std::map<std::string, std::vector<entity_t *> > > getEntities();
+
+    std::map<std::string, std::map<std::string, std::vector<entity_t *> > >
+    getEntities();
 
     std::map<std::string, std::vector<entity_t *> > getLocEntity();
 
@@ -98,18 +100,22 @@ public:
 };
 
 
-class ancillary_resources_t{
+class ancillary_resources_t
+{
 private:
     std::map<std::string, std::vector<ares_t *> > _tools;
+
 public:
     ancillary_resources_t(std::map<std::string, int> tools);
     std::vector<tool_t *> aRound(std::map<std::string, int> amount);
     std::vector<tool_t *> aRound(std::string, int);
 };
 
-class machines_t{
+class machines_t
+{
 private:
     std::map<std::string, machine_t *> _machines;
+
 public:
     void addMachines(std::vector<entity_t *> ents);
 

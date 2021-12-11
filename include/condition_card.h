@@ -1,8 +1,8 @@
 #ifndef __CONDITION_CARD_H__
 #define __CONDITION_CARD_H__
 
-#include <include/infra.h>
 #include <include/csv.h>
+#include <include/infra.h>
 #include <stdarg.h>
 #include <map>
 #include <set>
@@ -80,7 +80,7 @@ private:
 
 
 protected:
-        /**
+    /**
      * addLog () - add log
      */
     virtual inline void addLog(std::string text) { _log.push_back(text); }
@@ -199,7 +199,8 @@ public:
         return _models.at(recipe).at(oper);
     }
 
-    inline std::map<std::string, std::map<int, card_t> > getModels(){
+    inline std::map<std::string, std::map<int, card_t> > getModels()
+    {
         return _models;
     }
 
@@ -213,8 +214,6 @@ public:
      */
     virtual std::string formated(std::string text);
     virtual char *formated(char *);
-
-
 };
 
 #endif

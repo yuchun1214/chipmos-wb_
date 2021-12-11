@@ -1,20 +1,20 @@
+#include <assert.h>
 #include <include/arrival.h>
 #include <cstdlib>
 #include <ctime>
 #include <exception>
 #include <ios>
 #include <iostream>
-#include <assert.h>
 #include <iterator>
 #include <map>
 #include <set>
 #include <stdexcept>
 #include <string>
 
-#include <include/infra.h>
 #include <include/condition_card.h>
 #include <include/csv.h>
 #include <include/da.h>
+#include <include/infra.h>
 #include <include/route.h>
 
 using namespace std;
@@ -280,10 +280,9 @@ void setupCanRunModels(string bdidModelsMappingFile,
                        vector<lot_t> &lots,
                        vector<lot_t> &faulty_lots)
 {
-    condition_cards_h cards(12, "UTC1000", "UTC1000S", "UTC2000",
-                            "UTC2000S", "UTC3000", "UTC5000S", "Maxum Base",
-                            "Maxum Plus", "Maxum Ultra", "Iconn", "Iconn Plus",
-                            "RAPID");
+    condition_cards_h cards(12, "UTC1000", "UTC1000S", "UTC2000", "UTC2000S",
+                            "UTC3000", "UTC5000S", "Maxum Base", "Maxum Plus",
+                            "Maxum Ultra", "Iconn", "Iconn Plus", "RAPID");
     cards.addMapping("Maxum (Ultra)", 2, "Maxum", "Maxum-Ultra");
     cards.readBdIdModelsMappingFile(bdidModelsMappingFile);
     vector<lot_t> result;
@@ -330,13 +329,16 @@ void setPartId(string filename,
     iter(lots, i)
     {
         try {
-            string part_id = bom_oper_part.at(lots[i].tmp_oper).at(lots[i].bomId());;
+            string part_id =
+                bom_oper_part.at(lots[i].tmp_oper).at(lots[i].bomId());
+            ;
             lots[i].setPartId(part_id);
         } catch (std::out_of_range &e) {
             err_msg = "Lot Entry " + to_string(i + 2) + ": " +
                       lots[i].lotNumber() +
-                      " has no mapping relationship between its oper :" + to_string(lots[i].tmp_oper) + 
-                      " bom id(" + lots[i].bomId() + ") and its part_id";
+                      " has no mapping relationship between its oper :" +
+                      to_string(lots[i].tmp_oper) + " bom id(" +
+                      lots[i].bomId() + ") and its part_id";
             lots[i].addLog(err_msg);
             faulty_lots.push_back(lots[i]);
             wip_report.push_back(err_msg);
@@ -378,10 +380,10 @@ void setAmountofWire(string filename,
     {
         try {
             int amountOfWires = part_roll.at(lots[i].part_id());
-            if(amountOfWires > 0){
+            if (amountOfWires > 0) {
                 lots[i].setAmountOfWires(amountOfWires);
                 result.push_back(lots[i]);
-            }else{
+            } else {
                 lots[i].addLog("There is no wire.");
                 faulty_lots.push_back(lots[i]);
             }
@@ -394,7 +396,6 @@ void setAmountofWire(string filename,
             faulty_lots.push_back(lots[i]);
             wip_report.push_back(err_msg);
         }
-
     }
 
     lots = result;
@@ -476,17 +477,17 @@ void setAmountOfTools(string filename,
     vector<lot_t> result;
 
     string err_msg;
-    
+
     int amountOfTool;
     iter(lots, i)
     {
         try {
             amountOfTool = pno_qty.at(lots[i].part_no());
 
-            if(amountOfTool > 0){
+            if (amountOfTool > 0) {
                 lots[i].setAmountOfTools(amountOfTool);
                 result.push_back(lots[i]);
-            }else{
+            } else {
                 lots[i].addLog("There is no tool for this lot.");
                 faulty_lots.push_back(lots[i]);
             }
@@ -502,32 +503,33 @@ void setAmountOfTools(string filename,
             faulty_lots.push_back(lots[i]);
             wip_report.push_back(err_msg);
         }
-
     }
 
     lots = result;
     return;
 }
 
-void setupUph(string uph_file_name, vector<lot_t> & lots, vector<lot_t> & faulty_lots){
+void setupUph(string uph_file_name,
+              vector<lot_t> &lots,
+              vector<lot_t> &faulty_lots)
+{
     csv_t uph_csv(uph_file_name, "r", true, true);
     uph_csv.trim(" ");
-    uph_csv.setHeaders(map<string, string>({
-                    {"oper", "OPER"},
-                    {"cust", "CUST"},
-                    {"recipe", "B/D#"},
-                    {"model", "MODEL"},
-                    {"uph", "G.UPH"}
-                }));
+    uph_csv.setHeaders(map<string, string>({{"oper", "OPER"},
+                                            {"cust", "CUST"},
+                                            {"recipe", "B/D#"},
+                                            {"model", "MODEL"},
+                                            {"uph", "G.UPH"}}));
     bool retval = 0;
     vector<lot_t> temp;
     vector<lot_t> maybe_faulty;
     vector<lot_t> result;
-    iter(lots, i){
-        retval = lots[i].setUph(uph_csv); 
-        if(retval) {
+    iter(lots, i)
+    {
+        retval = lots[i].setUph(uph_csv);
+        if (retval) {
             result.push_back(lots[i]);
-        }else{
+        } else {
             faulty_lots.push_back(lots[i]);
         }
     }
@@ -574,12 +576,12 @@ vector<lot_t> createLots(string wip_file_name,
     //
     // filter, check if lot is in scheduling plan
     lots = wb_7_filter(alllots, dontcare, routes);
-    
+
     /*************************************************************************************/
     // route traversal and sum the queue time
     lots =
         queueTimeAndQueue(lots, faulty_lots, dontcare, das, routes, wip_report);
-    
+
     // setPartId
     setPartId(bomlist_filename, lots, faulty_lots, wip_report);
     setAmountofWire(gw_filename, lots, faulty_lots, wip_report);
@@ -587,10 +589,9 @@ vector<lot_t> createLots(string wip_file_name,
     setPartNo(heatblock_filename, lots, faulty_lots, wip_report);
     setAmountOfTools(ems_filename, lots, faulty_lots, wip_report);
 
-    setupCanRunModels("wb_bdid_models.csv",
-                      lots, faulty_lots);
-    
-    
+    setupCanRunModels("wb_bdid_models.csv", lots, faulty_lots);
+
+
     setupUph("uph.csv", lots, faulty_lots);
 
 

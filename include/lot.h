@@ -50,6 +50,7 @@ protected:
     std::map<std::string, double> _uphs;
     std::map<std::string, double> _model_process_times;
     std::map<std::string, double> _entity_process_times;
+
 public:
     int tmp_oper;
     bool tmp_mvin;
@@ -206,9 +207,9 @@ public:
      */
     void setCanRunModels(std::vector<std::string> models);
 
-    
+
     int getAmountOfTools();
-    
+
     int getAmountOfWires();
 
     std::vector<std::string> getCanRunModels();
@@ -327,11 +328,11 @@ public:
      * @return std::string type data
      */
     std::string bomId();
-    
+
     /**
      * pin_package () - get the pin_package of the lot
      *
-     * pin_package, an information of lot, is used to 
+     * pin_package, an information of lot, is used to
      */
     std::string pin_package();
 
@@ -382,16 +383,17 @@ public:
 
     bool setUph(csv_t uph);
 
-    void setCanRunLocation(std::map<std::string, std::vector<std::string> > model_locations);
+    void setCanRunLocation(
+        std::map<std::string, std::vector<std::string> > model_locations);
 
     std::vector<std::string> can_run_locations();
 
     bool isEntityCanRun(std::string model, std::string location);
 
-    bool addCanRunEntity(entity_t * ent);
+    bool addCanRunEntity(entity_t *ent);
 
     std::vector<std::string> getCanRunEntities();
-    
+
     job_t job();
 
     std::map<std::string, double> getEntitiyProcessTime();
@@ -401,19 +403,23 @@ public:
     std::map<std::string, double> uphs();
 };
 
-inline void lot_t::clearCanRunLocation(){
+inline void lot_t::clearCanRunLocation()
+{
     _can_run_locations.clear();
 }
 
-inline std::map<std::string, double> lot_t::uphs(){
+inline std::map<std::string, double> lot_t::uphs()
+{
     return _uphs;
 }
 
-inline std::vector<std::string> lot_t::getCanRunEntities(){
+inline std::vector<std::string> lot_t::getCanRunEntities()
+{
     return _can_run_entities;
 }
 
-inline std::vector<std::string> lot_t::can_run_locations(){
+inline std::vector<std::string> lot_t::can_run_locations()
+{
     return _can_run_locations;
 }
 
@@ -441,11 +447,13 @@ inline int lot_t::oper()
 // {
 //     return std::min(_amount_of_tools, _amount_of_wires);
 // }
-inline int lot_t::getAmountOfTools(){
+inline int lot_t::getAmountOfTools()
+{
     return _amount_of_tools;
 }
 
-inline int lot_t::getAmountOfWires(){
+inline int lot_t::getAmountOfWires()
+{
     return _amount_of_wires;
 }
 
@@ -596,39 +604,45 @@ inline void lot_t::setCanRunModel(std::string model)
 {
     _uphs[model] = 0;
     _model_process_times[model] = 0;
-    if(find(_can_run_models.begin(), _can_run_models.end(), model) != _can_run_models.end())
+    if (find(_can_run_models.begin(), _can_run_models.end(), model) !=
+        _can_run_models.end())
         _can_run_models.push_back(model);
 }
 
 inline void lot_t::setCanRunModels(std::vector<std::string> models)
 {
-    iter(models, i) { 
+    iter(models, i)
+    {
         _uphs[models[i]] = 0;
         _model_process_times[models[i]] = 0;
     }
     _can_run_models = models;
 }
-    
-inline bool lot_t::setUph(std::string model, double uph){
-    if(uph == 0){
-       _uphs.erase(model);
-       _model_process_times.erase(model);
-       return false;
-    }else{
+
+inline bool lot_t::setUph(std::string model, double uph)
+{
+    if (uph == 0) {
+        _uphs.erase(model);
+        _model_process_times.erase(model);
+        return false;
+    } else {
         _uphs.at(model) = uph;
         _model_process_times[model] = (_qty / uph) * 60;
     }
     return true;
 }
 
-inline std::vector<std::string> lot_t::getCanRunModels(){ return _can_run_models;
+inline std::vector<std::string> lot_t::getCanRunModels()
+{
+    return _can_run_models;
 }
 
-inline std::string lot_t::pin_package(){
+inline std::string lot_t::pin_package()
+{
     return _pin_package;
 }
 
-typedef struct{
+typedef struct {
     std::string wire_tools_name;
     std::string wire_name;
     std::string tool_name;
@@ -645,27 +659,38 @@ typedef struct{
 bool lot_group_comparision(lot_group_t g1, lot_group_t g2);
 
 
-class lots_t{
+class lots_t
+{
 protected:
     std::vector<lot_t> lots;
-    std::map<std::string, std::vector<lot_t*> > wire_lots;
-    std::map<std::string, std::vector<lot_t*> > tool_lots;
-    std::map<std::string, std::vector<lot_t*> > tool_wire_lots;
+    std::map<std::string, std::vector<lot_t *> > wire_lots;
+    std::map<std::string, std::vector<lot_t *> > tool_lots;
+    std::map<std::string, std::vector<lot_t *> > tool_wire_lots;
     std::map<std::string, int> amount_of_wires;
     std::map<std::string, int> amount_of_tools;
 
-    std::map<std::string, int> sta_models(std::map<std::string, std::map<std::string, std::vector<entity_t *> > > ents); //location -> amount
-    std::map<std::string, int> sta_models(std::map<std::string, std::vector<entity_t *> > loc_ents);
+    std::map<std::string, int> sta_models(
+        std::map<std::string, std::map<std::string, std::vector<entity_t *> > >
+            ents);  // location -> amount
+    std::map<std::string, int> sta_models(
+        std::map<std::string, std::vector<entity_t *> > loc_ents);
 
-    bool toolWireLotsHasLots(); 
+    bool toolWireLotsHasLots();
+
 public:
     void addLots(std::vector<lot_t> lots);
 
     std::vector<lot_group_t> round(entities_t machines);
     std::vector<std::vector<lot_group_t> > rounds(entities_t ents);
 
-    inline std::map<std::string, int> amountOfWires() { return amount_of_wires; } 
-    inline std::map<std::string, int> amountOfTools() { return amount_of_tools; } 
+    inline std::map<std::string, int> amountOfWires()
+    {
+        return amount_of_wires;
+    }
+    inline std::map<std::string, int> amountOfTools()
+    {
+        return amount_of_tools;
+    }
 };
 
 #endif

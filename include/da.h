@@ -1,8 +1,8 @@
 #ifndef __DA_H__
 #define __DA_H__
 
-#include <include/infra.h>
 #include <include/csv.h>
+#include <include/infra.h>
 #include <include/lot.h>
 #include <vector>
 

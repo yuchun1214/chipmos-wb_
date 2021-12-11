@@ -27,8 +27,8 @@
 #define __JOB_BASE_H__
 
 #include <include/def.h>
-#include <include/linked_list.h>
 #include <include/infra.h>
+#include <include/linked_list.h>
 #include <stddef.h>
 
 
@@ -62,8 +62,11 @@ struct process_time_t {
  * @struct job_base_t
  * @brief A structure that store genes and some basic information about job
  *
- * job_base_t is a genetic algorithm object which store genes and some information about a job.
- * @b ms_gene determines which machine accept this job. @b os_seq_gene determines the order of accepted job in machine. Both variables are double const * type to prevent setting value on gene. 
+ * job_base_t is a genetic algorithm object which store genes and some
+ * information about a job.
+ * @b ms_gene determines which machine accept this job. @b os_seq_gene
+ * determines the order of accepted job in machine. Both variables are double
+ * const * type to prevent setting value on gene.
  */
 struct job_base_t {
     void *ptr_derived_object;

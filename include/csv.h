@@ -12,13 +12,13 @@
 #define __CSV_H__
 
 #include <bits/stdint-uintn.h>
+#include <include/infra.h>
 #include <cerrno>
 #include <cstring>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include <include/infra.h>
 
 /**
  * @class csv_t
@@ -308,7 +308,8 @@ public:
 
 
     /**
-     * filter() - get a new csv_t object by specifing that column's name == value
+     * filter() - get a new csv_t object by specifing that column's name ==
+     * value
      */
     csv_t filter(std::string head, std::string value);
 

@@ -60,26 +60,26 @@ time_t timeConverter(std::string text)
 {
     // TODO : convert text to time;
     // struct tm _tm;
-    // sscanf(text.c_str(), "%d/%d/%d %d:%d", &_tm.tm_year, &_tm.tm_mon, &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min);
-    // _tm.tm_sec = 0;
-    // _tm.tm_isdst = false;
-  	struct tm _tm;
+    // sscanf(text.c_str(), "%d/%d/%d %d:%d", &_tm.tm_year, &_tm.tm_mon,
+    // &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min); _tm.tm_sec = 0; _tm.tm_isdst =
+    // false;
+    struct tm _tm;
     sscanf(text.c_str(), "%d-%d-%d %d:%d", &_tm.tm_year, &_tm.tm_mon,
            &_tm.tm_mday, &_tm.tm_hour, &_tm.tm_min);
     _tm.tm_sec = 0;
     _tm.tm_isdst = false;
     _tm.tm_year += 100;
 
-    return mktime(&_tm);  
-
+    return mktime(&_tm);
 }
 
-bool isSameInfo(struct __info_t info1, struct __info_t info2){
-    if(info1.number_size != info2.number_size){
+bool isSameInfo(struct __info_t info1, struct __info_t info2)
+{
+    if (info1.number_size != info2.number_size) {
         return false;
-    }else{
-        for(unsigned int i =0; i < info1.number_size; i++)
-            if(info1.data.number[i] != info2.data.number[i])
+    } else {
+        for (unsigned int i = 0; i < info1.number_size; i++)
+            if (info1.data.number[i] != info2.data.number[i])
                 return false;
     }
     return true;
@@ -89,7 +89,7 @@ bool isSameInfo(struct __info_t info1, struct __info_t info2){
 void random(double *genes, int size)
 {
     for (int i = 0; i < size; ++i) {
-        genes[i] = (double) rand() / (double) RAND_MAX;
+        genes[i] = randomDouble();
     }
 }
 
@@ -106,6 +106,7 @@ int random_range(int start, int end, int different_num)
     }
 }
 
-double randomDouble(){
+double randomDouble()
+{
     return (double) rand() / (double) RAND_MAX;
 }

@@ -32,7 +32,7 @@ std::string condition_cards_h::formated(std::string _text)
     for (unsigned int i = 0; i < _text.length(); ++i) {
         if (_text[i] == ' ')
             _text[i] = '-';
-        else if(_text[i] & 0x40){
+        else if (_text[i] & 0x40) {
             _text[i] &= 0xDF;
         }
     }
@@ -45,7 +45,7 @@ char *condition_cards_h::formated(char *text)
     for (; *ptr; ++ptr) {
         if (*ptr == ' ')
             *ptr = '-';
-        else if(*ptr & 0x40){
+        else if (*ptr & 0x40) {
             *ptr &= 0xDF;
         }
     }
@@ -189,7 +189,8 @@ card_t condition_cards_h::readConditionCard(string filename,
                 temp_model = strdup(temp.c_str());
                 stringToLower(temp_model);
                 // check _model_mapping
-                if (_model_mapping.count(temp_model) > 0 && result.at(i).length()) {
+                if (_model_mapping.count(temp_model) > 0 &&
+                    result.at(i).length()) {
                     can_run_models += _model_mapping[temp_model];
                 } else {
                     formated(temp_model);
@@ -207,21 +208,22 @@ card_t condition_cards_h::readConditionCard(string filename,
     return card_t{.oper = oper, .recipe = recipe, .models = can_run_models};
 }
 
-void condition_cards_h::readBdIdModelsMappingFile(string filename){
+void condition_cards_h::readBdIdModelsMappingFile(string filename)
+{
     csv_t bd_model(filename, "r", true, true);
     bd_model.trim(" ");
     // map<string, map<int, card_t > > models;
     map<string, string> elements;
-    unsigned int nrows = bd_model.nrows(); 
+    unsigned int nrows = bd_model.nrows();
     unsigned int oper;
     string bd_id;
-    for(unsigned int i = 0; i < nrows; ++i){
+    for (unsigned int i = 0; i < nrows; ++i) {
         elements = bd_model.getElements(i);
-        oper = stoul(elements["oper"]); 
+        oper = stoul(elements["oper"]);
         bd_id = elements["bd_id"];
-        if(_models[bd_id].count(oper) == 0){
-            _models[bd_id][oper] = card_t{ .oper = oper, .recipe = bd_id};
+        if (_models[bd_id].count(oper) == 0) {
+            _models[bd_id][oper] = card_t{.oper = oper, .recipe = bd_id};
         }
-        _models[bd_id][oper].models.push_back(formated(elements["model"])); 
+        _models[bd_id][oper].models.push_back(formated(elements["model"]));
     }
-} 
+}
