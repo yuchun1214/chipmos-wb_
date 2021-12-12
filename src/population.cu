@@ -835,6 +835,10 @@ double geneticAlgorithm(void *_pop)
         sortChromosomes<<<1, 1>>>(pop->chromosomes.chromosomes,
                                   AMOUNT_OF_R_CHROMOSOMES);
 
+//        cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing"); 
+//        printf("fitness_value = %f\n", chrs[0].fitnessValue);
+//
+
         generateCrossoverFactors<<<1, CROSSOVER_AMOUNT>>>(
                 states, 
                 pop->evolution_factors.device.c_selected1,
@@ -880,15 +884,16 @@ double geneticAlgorithm(void *_pop)
             pop->evolution_factors.device.gene_idx,
             pop->evolution_factors.device.new_genes, CROSSOVER_AMOUNT,
             AMOUNT_OF_JOBS, MUTATION_AMOUNT, AMOUNT_OF_CHROMOSOMES);
+
         cudaStreamSynchronize(0);
     }
 
     cudaCheck(cudaMemcpy(chrs, pop->chromosomes.chromosomes, sizeof(chromosome_base_t)*AMOUNT_OF_R_CHROMOSOMES, cudaMemcpyDeviceToHost), "cudaMemcpy for chromosomes for testing"); 
-    double best_fitness_val = chrs[0].fitnessValue;
-
+    // printf("fitness_value = %f\n", chrs[0].fitnessValue);
+    double fitnessValue = chrs[0].fitnessValue;
     cudaCheck(cudaFreeHost(chrs), "cudaFree chrs");
     // pthread_exit(NULL);
-    return best_fitness_val;
+    return fitnessValue;
 }
 
 

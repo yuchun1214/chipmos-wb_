@@ -112,7 +112,18 @@ int main(int argc, const char *argv[])
     machines.addMachines(entities.getAllEntity());
 
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
-
+    // statistic
+    // map<int, double> number_job_map_to_time;
+    // for(int i = 0; i < round_groups.size(); ++i){
+    // }
+    int total_number_of_jobs = 0;
+    for(int i = 0; i < round_groups.size(); ++i){
+        for(int j = 0; j < round_groups[i].size(); ++j){
+            total_number_of_jobs += round_groups[i][j].lots.size();
+        }
+    }
+    // printf("Total number of jobs = %d\n", total_number_of_jobs);
+    
     // srand(time(NULL));
     double tm = 60; 
     double total_completion_time = 0;
@@ -126,7 +137,7 @@ int main(int argc, const char *argv[])
                                            .AMOUNT_OF_R_CHROMOSOMES = 100,
                                            .EVOLUTION_RATE = 0.8,
                                            .SELECTION_RATE = 0.2,
-                                           .GENERATIONS = 60 / round_groups.size(),
+                                           .GENERATIONS = 60 * (t.AMOUNT_OF_JOBS / (double)total_number_of_jobs),
                                            .SWAP_CHROMOSOMES = 60},
                             .task = t};
         initializePopulation(&pop);

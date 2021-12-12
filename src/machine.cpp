@@ -123,7 +123,8 @@ __qualifier__ void scheduling(machine_t *machine, job_base_operations_t * jbops,
     cust.data.text[3] = 'I';
     cust.text_size = 4;
     cust.number_size = 1;
-    
+
+    machine->total_completion_time = 0;
     while(it){
         job = (job_t *)it->ptr_derived_object;
         arrival_time = job->base.arriv_t;
@@ -138,14 +139,16 @@ __qualifier__ void scheduling(machine_t *machine, job_base_operations_t * jbops,
         start_time = (start_time + setup_time) > arrival_time ? start_time + setup_time : arrival_time;
         jbops->set_start_time(&job->base, start_time);
         start_time = jbops->get_end_time(&job->base);
-
-        total_completion_time += start_time;
+        
+        // total_completion_time = start_time;
+        machine->total_completion_time += start_time;
 
         prev_job = job;
         it = it->next;
     }
+
+    // machine->total_completion_time = total_completion_time;
     machine->makespan = start_time;
-    machine->total_completion_time = total_completion_time;
     machine->tool->time = start_time;
     machine->wire->time = start_time;
 
