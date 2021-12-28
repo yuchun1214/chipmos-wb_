@@ -110,8 +110,21 @@ int main(int argc, const char *argv[])
     entities.addMachines(machine_csv, location_csv);
     machines_t machines;
     machines.addMachines(entities.getAllEntity());
-
+    
+    srand(20000);
+    double average_rate = 0;
+    int number_of_groups = 0;
     vector<vector<lot_group_t> > round_groups = lots.rounds(entities);
+    for(int i = 0; i < round_groups.size(); ++i){
+        number_of_groups += round_groups[i].size();
+        // printf("Round[%d] has %d groups\n", i, round_groups[i].size());
+        for(int j = 0; j < round_groups[i].size(); ++j){
+            average_rate += round_groups[i][j].lot_amount / (double)round_groups[i][j].machine_amount;
+            // printf("Group [%s] : %g\n", round_groups[i][j].wire_tools_name.c_str(), round_groups[i][j].lot_amount / (double)round_groups[i][j].machine_amount);
+            
+        }
+    } 
+    // printf("Average rate = %g\n", average_rate / number_of_groups);
     // statistic
     // map<int, double> number_job_map_to_time;
     // for(int i = 0; i < round_groups.size(); ++i){

@@ -399,7 +399,7 @@ std::vector<lot_group_t> lots_t::round(entities_t machines){
     }
     std::sort(groups.begin(), groups.end(), lot_group_comparision);
     
-    for(unsigned int i = 0; i < 50; ++i){
+    for(unsigned int i = 0; i < 20; ++i){
         if(groups[i].lot_amount > 0){
             selected_groups.push_back(groups[i]);
         }
