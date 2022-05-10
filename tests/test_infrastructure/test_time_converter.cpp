@@ -155,6 +155,14 @@ INSTANTIATE_TEST_SUITE_P(
         string_to_time_test_case{"22-5-01", 1651334400, "", 1651334400},
         string_to_time_test_case{"22-05-1", 1651334400, "", 1651334400},
         string_to_time_test_case{"22-5-1", 1651334400, "", 1651334400},
+        string_to_time_test_case{"22-05-10 02:06:57", 1652119617, "",
+                                 1652119617},
+        string_to_time_test_case{"22-05-10 02:06", 1652119560, "", 1652119560},
+        string_to_time_test_case{"2022/05/10 02:06:57", 1652119617, "",
+                                 1652119617},
+        string_to_time_test_case{"2022/05/10 02:06", 1652119560, "",
+                                 1652119560},
+
 
 
         string_to_time_test_case{"22-005-01", 0, "", 0},
